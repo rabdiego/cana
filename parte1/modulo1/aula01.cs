@@ -232,20 +232,151 @@ class Questao3
     }
 }
 
+class Questao4
+{
+    // Essa eu não consegui fazer por completo, pois quando há elementos iguais, quebra a lógica
+    // Lógica que é bem simples, primeiro você ordena a lista, e depois vai trocando os valores
+    // das duplas de índices (2,3), (6,7), (10, 11)...
+
+    private static int IndiceMaximo(List <int> L, int inicio, int fim)
+    {
+        List <int> L_copy = new List <int> (L);
+
+        int maior = L_copy[inicio], indiceMaior = inicio, N = L_copy.Count;
+
+        for (int i = inicio; i < fim; i++)
+        {
+            if (L_copy[i] > maior)
+            {
+                maior = L_copy[i];
+                indiceMaior = i;
+            }
+        }
+
+        return indiceMaior;
+    }
+
+    private static List <int> Trocar(List <int> L, int a, int b)
+    {
+        List <int> L_copy = new List <int> (L);
+
+        int temp = L_copy[a];
+        L_copy[a] = L_copy[b];
+        L_copy[b] = temp;
+
+        return L_copy;
+    }
+
+    private static List <int> SelectionSort(List <int> L, int a, int b, bool crescente)
+    {
+        var L_copy = new List <int> (L);
+        int index, N = L_copy.Count;
+
+        if (crescente == true)
+        {
+            for (int i = a; i < b; i++)
+            {
+                index = IndiceMaximo(L_copy, a, b - (i - a));
+                L_copy = Trocar(L_copy, index, b - (i - a) - 1);
+            }
+        }
+        else
+        {
+            for (int i = a; i < b; i++)
+            {
+                index = IndiceMaximo(L_copy, i, b);
+                L_copy = Trocar(L_copy, index, i);
+            }
+        }
+
+        return L_copy;
+    }
+
+    public static List <int> OrdenaZigZag(List <int> L)
+    {
+        var L_copy = new List <int> (L);
+        int N = L_copy.Count;
+
+        L_copy = SelectionSort(L_copy, 0, N, true);  // O(n²)
+
+        // O(n)
+        for (int i = 3; i < N; i += 4)
+        {
+            L_copy = Trocar(L_copy, i, i-1);  // O(1)
+        }
+
+        // Total: O(n²)
+        return L_copy;
+    }
+}
+
+class Questao5
+{
+    // Omiti a análise de tempo pois é praticamente o mesmo algorítmo que usei na questão 2
+    
+    private static int IndiceMinimo(List <int> L, int inicio, int fim)
+    {
+        List <int> L_copy = new List <int> (L);
+
+        int menor = L_copy[inicio], indiceMenor = inicio, N = L_copy.Count;
+
+        for (int i = inicio; i < fim; i += 2)
+        {
+            if (L[i] < menor)
+            {
+                menor = L[i];
+                indiceMenor = i;
+            }
+        }
+
+        return indiceMenor;
+    }
+
+    private static List <int> Trocar(List <int> L, int a, int b)
+    {
+        List <int> L_copy = new List <int> (L);
+
+        int temp = L_copy[a];
+        L_copy[a] = L_copy[b];
+        L_copy[b] = temp;
+
+        return L_copy;
+    }
+
+    public static List <int> OrdenaImpar(List <int> L)
+    {
+        var L_copy = new List <int> (L);
+        int index, N = L_copy.Count;
+
+        for (int i = 1; i < N; i += 2)
+        {
+            index = IndiceMinimo(L_copy, i, N);
+            L_copy = Trocar(L_copy, index, i);
+        }
+
+        return L_copy;
+    }
+}
+
+
 class Testes
 {
     public static void Main(String[] args)
     {
         var a = new List <int> {22, 28, 22, 28, 50, 39, 44, 3, 8, 33, 45, 16, 12, 3, 19, 16, 48, 46, 12, 9, 27, 50, 34, 41, 40, 21, 27, 10, 35, 14};
-        a = Questao3.OrdenaUnimodal(a, 18);
+        a = Questao5.OrdenaImpar(a);
         
-        foreach (int element in a)
+        for (int i = 0; i < a.Count; i++)
         {
-            for (int i = 0; i < element; i++)
+            if (i % 2 != 0)
             {
-                Console.Write("#");
+                for (int j = 0; j < a[i]; j++)
+                {
+                    Console.Write("#");
+                }
+                Console.WriteLine("");
             }
-            Console.WriteLine("");
+            
         }
     }
 }
